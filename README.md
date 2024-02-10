@@ -18,6 +18,8 @@
 [![Video Tutorial](https://img.youtube.com/vi/g8X5AoqCJHc/0.jpg)](https://youtu.be/g8X5AoqCJHc)
 
 
+## Susbcribe:
+
 
 # Deploy Netflix Clone on Cloud using Jenkins - DevSecOps Project!
 
