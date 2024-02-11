@@ -28,7 +28,7 @@ pipeline{
             }
         }
         stage("quality gate"){
-           steps {
+          steps {
                 script {
                     waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
                 }
@@ -52,25 +52,24 @@ pipeline{
         }
         stage("Docker Build & Push"){
             steps{
-              script{
-                  withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                      sh "docker build --build-arg TMDB_V3_API_KEY=<yourapikey> -t netflix ."
-                      sh "docker tag netflix nasi101/netflix:latest "
-                      sh "docker push nasi101/netflix:latest "
+                script{
+                  withDockerRegistry(credentialsId: 'docker-token', toolName: 'docker'){   
+                      sh "docker build --build-arg TMDB_V3_API_KEY=61e43bb1d22eed4a6e569f505bf40cb8 -t netflix ."
+                      sh "docker tag netflix boubamahir/netflix:latest "
+                      sh "docker push boubamahir/netflix:latest "
                   }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image nasi101/netflix:latest > trivyimage.txt" 
+                sh "trivy image boubamahir/netflix:latest > trivyimage.txt" 
             }
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name netflix -p 8081:80 nasi101/netflix:latest'
+                  sh 'docker run -d --name netflix -p 8081:80 boubamahir/netflix:latest'
             }
         }
     }
 }
-
