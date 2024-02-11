@@ -66,10 +66,33 @@ pipeline{
                 sh "trivy image boubamahir/netflix:latest > trivyimage.txt" 
             }
         }
+        stage('Remove Existing Container'){
+            steps{
+                script {
+                    // Stop and remove the existing container if it exists
+                    sh 'docker rm -f netflix || true'
+                }
+    }
+}
+        
         stage('Deploy to container'){
             steps{
-                  sh 'docker run -d --name netflix -p 8081:80 boubamahir/netflix:latest'
+                sh 'docker run -d --name netflix -p 8081:80 boubamahir/netflix:latest'
             }
         }
     }
+    
+    post {
+      always {
+        emailext attachLog: true,
+          subject: "`${currentBuild.result}` ",
+          body : "Project: ${env.JOB_NAME} <br/>" +
+                  "Build Number: ${env.BUILD_NUMBER} <br/>" +
+                  "URL: ${env.BUILD_URL} " ,
+          to : "amamahir2@gmail.com",
+          attachmentsPattern: "trivyfs.txt, trivyimage.txt"
+      }
+    }
 }
+
+
